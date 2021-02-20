@@ -7,7 +7,7 @@ var outdoorsmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{
   tileSize: 512,
   maxZoom: 18,
   zoomOffset: -1,
-  id: "mapbox/outdoors",
+  id: "mapbox.outdoors",
   accessToken: API_KEY
 });
 
@@ -16,7 +16,7 @@ var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/
   tileSize: 512,
   maxZoom: 18,
   zoomOffset: -1,
-  id: "mapbox/satellite",
+  id: "mapbox.satellite",
   accessToken: API_KEY
 });
 
@@ -25,7 +25,7 @@ var grayscalemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/
   tileSize: 512,
   maxZoom: 18,
   zoomOffset: -1,
-  id: "mapbox/light",
+  id: "mapbox.light",
   accessToken: API_KEY
 })
 
