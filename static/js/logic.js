@@ -6,47 +6,47 @@ function createMap(earthquakes) {
     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
     id: "mapbox.outdoors",
-    accessToken: "pk.eyJ1IjoiZm11a2FkZGFtIiwiYSI6ImNra2VuNDAwMDA4MnEydXBlamwxZGVvdzMifQ.8EkbQls971Zotst7-D8OyA"
+    accessToken: API_KEY
   });
 
   var satellitemap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
     id: "mapbox.satellite",
-    accessToken: "pk.eyJ1IjoiZm11a2FkZGFtIiwiYSI6ImNra2VuNDAwMDA4MnEydXBlamwxZGVvdzMifQ.8EkbQls971Zotst7-D8OyA"
+    accessToken: API_KEY
   });
 
   var grayscalemap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
     id: "mapbox.light",
-    accessToken: "pk.eyJ1IjoiZm11a2FkZGFtIiwiYSI6ImNra2VuNDAwMDA4MnEydXBlamwxZGVvdzMifQ.8EkbQls971Zotst7-D8OyA"
+    accessToken: API_KEY
   });
 
   var map = L.map("mapid", {
     center: [37.09, -95.71],
     zoom: 5,
     layers: [graymap_background, satellitemap_background, outdoors_background]
-   });
-   graymap_background.addTo(map);
-   var tectonicplates = new L.LayerGroup();
-   var earthquakes = new L.LayerGroup();
-   var baseMaps = {
+  });
+  graymap_background.addTo(map);
+  var tectonicplates = new L.LayerGroup();
+  var earthquakes = new L.LayerGroup();
+  var baseMaps = {
     Satellite: satellitemap_background,
     Grayscale: graymap_background,
     Outdoors: outdoors_background
-   };
-   var overlayMaps = {
+  };
+  var overlayMaps = {
     "Tectonic Plates": tectonicplates,
     "Earthquakes": earthquakes
-   };
-   // control which layers are visible.
-   L
+  };
+  // control which layers are visible.
+  L
     .control
     .layers(baseMaps, overlayMaps)
     .addTo(map);
-  
-   d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"), function(data) {
+
+  d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"), function (data) {
     function styleInfo(feature) {
       return {
         opacity: 1,
@@ -81,11 +81,11 @@ function createMap(earthquakes) {
       return magnitude * 3;
     }
     L.geoJson(data, {
-      pointToLayer: function(feature, latlng) {
+      pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng);
       },
       style: styleInfo,
-      onEachFeature: function(feature, layer) {
+      onEachFeature: function (feature, layer) {
         layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
       }
     }).addTo(earthquakes);
@@ -93,7 +93,7 @@ function createMap(earthquakes) {
     var legend = L.control({
       position: "bottomright"
     });
-    legend.onAdd = function() {
+    legend.onAdd = function () {
       var div = L
         .DomUtil
         .create("div", "info legend");
@@ -114,17 +114,17 @@ function createMap(earthquakes) {
     };
     legend.addTo(map);
     d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json",
-      function(platedata) {
+      function (platedata) {
         L.geoJson(platedata, {
           color: "orange",
           weight: 2
         })
-        .addTo(tectonicplates);
+          .addTo(tectonicplates);
         // add the tectonicplates layer to the map.
         tectonicplates.addTo(map);
       });
-   };
   };
+};
 
   // // Store our API inside a queryUrl
 // var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson"
