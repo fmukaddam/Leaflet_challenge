@@ -63,91 +63,95 @@ function createFeatures(earthquakeData) {
 //Create map
 function createMap(earthquakes) {
 
-// Define outdoormap, satellitemap, and grayscalemap layers
-var outdoorsmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-  attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-  tileSize: 512,
-  maxZoom: 18,
-  zoomOffset: -1,
-  id: "mapbox/outdoors-v11",
-  accessToken: API_KEY
-});
+  // Define outdoormap, satellitemap, and grayscalemap layers
+  var outdoorsmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize: 512,
+    maxZoom: 18,
+    zoomOffset: -1,
+    id: "mapbox/outdoors-v11",
+    accessToken: API_KEY
+  });
 
-var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-  attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-  tileSize: 512,
-  maxZoom: 18,
-  zoomOffset: -1,
-  id: "mapbox/satellite-v9",
-  accessToken: API_KEY
-});
+  var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize: 512,
+    maxZoom: 18,
+    zoomOffset: -1,
+    id: "mapbox/satellite-v9",
+    accessToken: API_KEY
+  });
 
-var grayscalemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-  attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-  tileSize: 512,
-  maxZoom: 18,
-  zoomOffset: -1,
-  id: "mapbox/light-v10",
-  accessToken: API_KEY
-});
+  var grayscalemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize: 512,
+    maxZoom: 18,
+    zoomOffset: -1,
+    id: "mapbox/light-v10",
+    accessToken: API_KEY
+  });
 
 
-// Define a baseMaps object to hold our base layers
-var baseMaps = {
-  "Outdoor Map": outdoorsmap,
-  "Greyscale Map": grayscalemap,
-  "Satellite Map": satellitemap
-};
+  // Define a baseMaps object to hold our base layers
+  var baseMaps = {
+    "Outdoor Map": outdoorsmap,
+    "Greyscale Map": grayscalemap,
+    "Satellite Map": satellitemap
+  };
 
-// Create overlay object to hold our overlay layer
-var overlayMaps = {
-  Earthquakes: earthquakes
-};
+  // Create overlay object to hold our overlay layer
+  var overlayMaps = {
+    Earthquakes: earthquakes
+  };
 
-// Create our map, giving it the streetmap and earthquakes layers to display on load
-var myMap = L.map("map", {
-  center: [
-    37.09, -95.71
-  ],
-  zoom: 5,
-  layers: [outdoorsmap, earthquakes]
-});
+  // Create our map, giving it the streetmap and earthquakes layers to display on load
+  var myMap = L.map("map", {
+    center: [
+      37.09, -95.71
+    ],
+    zoom: 5,
+    layers: [outdoorsmap, earthquakes]
+  });
 
-// Create a layer control
-// Pass in our baseMaps and overlayMaps
-// Add the layer control to the map
-L.control.layers(baseMaps, overlayMaps, {
-  collapsed: false
-}).addTo(myMap);
+  // Create a layer control
+  // Pass in our baseMaps and overlayMaps
+  // Add the layer control to the map
+  L.control.layers(baseMaps, overlayMaps, {
+    collapsed: false
+  }).addTo(myMap);
 
-// color function to be used when creating the legend
-function getColor(d) {
-  return d > 5 ? '#ff3333' :
-    d > 4 ? '#ff6633' :
-      d > 3 ? '#ff9933' :
-        d > 2 ? '#ffcc33' :
-          d > 1 ? '#ffff33' :
-            '#ccff33';
-}
-
-// Add legend to the map
-var legend = L.control({ position: 'bottomright' });
-
-legend.onAdd = function (map) {
-
-  var div = L.DomUtil.create('div', 'info legend'),
-    mags = [0, 1, 2, 3, 4, 5],
-    labels = [];
-
-  // loop through our density intervals and generate a label with a colored square for each interval
-  for (var i = 0; i < mags.length; i++) {
-    div.innerHTML +=
-      '<i style="background:' + getColor(mags[i] + 1) + '"></i> ' +
-      mags[i] + (mags[i + 1] ? '&ndash;' + mags[i + 1] + '<br>' : '+');
+  // color function to be used when creating the legend
+  function getColor(d) {
+    return d > 5 ? '#ff3333' :
+      d > 4 ? '#ff6633' :
+        d > 3 ? '#ff9933' :
+          d > 2 ? '#ffcc33' :
+            d > 1 ? '#ffff33' :
+              '#ccff33';
   }
 
-  return div;
-};
-
-legend.addTo(myMap)
+  // Add legend to the map
+  var legend = L.control({
+    position: "bottomright"
+  });
+  legend.onAdd = function () {
+    var div = L
+      .DomUtil
+      .create("div", "info legend");
+    var grades = [0, 1, 2, 3, 4, 5];
+    var colors = [
+      "#98EE00",
+      "#D4EE00",
+      "#EECC00",
+      "#EE9C00",
+      "#EA822C",
+      "#EA2C2C"
+    ];
+    for (var i = 0; i < grades.length; i++) {
+      div.innerHTML += "<i style='background: " + colors[i] + "'></i> " +
+        grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+    }
+    return div;
+  };
+  legend.addTo(myMap)
 };
