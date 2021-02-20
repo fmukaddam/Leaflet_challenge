@@ -1,5 +1,5 @@
 // Store our API inside a queryUrl
-var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"
+var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
 // Perform a GET request to the query URL
 d3.json(queryUrl, function (data) {
@@ -7,6 +7,7 @@ d3.json(queryUrl, function (data) {
   createFeatures(data.features);
   console.log(data.features)
 });
+
 
 //Create a function createFeatures with the pop-up data
 function createFeatures(earthquakeData) {
@@ -91,6 +92,7 @@ function createMap(earthquakes) {
     accessToken: API_KEY
   });
 
+  var tectonicplates = new L.LayerGroup();
 
   // Define a baseMaps object to hold our base layers
   var baseMaps = {
