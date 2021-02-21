@@ -23,24 +23,24 @@ function createFeatures(earthquakeData) {
   };
 
   // Define function to set the circle color based on the magnitude
-  function circleColor(magnitude) {
-    if (magnitude < 1) {
-      return "#ccff33"
+  function circleColor(depth) {
+    if (depth > 90) {
+      return "#EA2C2C"
     }
-    else if (magnitude < 2) {
-      return "#ffff33"
+    else if (depth > 70) {
+      return "#EA822C"
     }
-    else if (magnitude < 3) {
-      return "#ffcc33"
+    else if (depth > 50) {
+      return "#EE9C00"
     }
-    else if (magnitude < 4) {
-      return "#ff9933"
+    else if (depth > 30) {
+      return "#EECC00"
     }
-    else if (magnitude < 5) {
-      return "#ff6633"
+    else if (depth > 10) {
+      return "#D4EE00"
     }
     else {
-      return "#ff3333"
+      return "#9EF823"
     }
   };
   // Create a GeoJSON layer containing the features array on the earthquakeData object
@@ -49,7 +49,7 @@ function createFeatures(earthquakeData) {
     pointToLayer: function (earthquakeData, latlng) {
       return L.circle(latlng, {
         radius: radiusSize(earthquakeData.properties.mag),
-        color: circleColor(earthquakeData.properties.mag),
+        color: circleColor(earthquakeData.geometry.coordinates[2]),
         fillOpacity: 1
       });
     },
@@ -140,14 +140,14 @@ function createMap(earthquakes) {
     var div = L
       .DomUtil
       .create("div", "info legend");
-    var grades = [0, 1, 2, 3, 4, 5];
+    var grades = [-10, 10, 30, 50, 70, 90];
     var colors = [
-      "#98EE00",
-      "#D4EE00",
-      "#EECC00",
-      "#EE9C00",
+      "#EA2C2C",
       "#EA822C",
-      "#EA2C2C"
+      "#EE9C00",
+      "#EECC00",
+      "#D4EE00",
+      "#9EF823"
     ];
     for (var i = 0; i < grades.length; i++) {
       div.innerHTML += "<i style='background: " + colors[i] + "'></i> " +
